@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
+import { encryptApiKeys } from "@/lib/encryption";
 
 interface HeaderAreaProps {
     theme: string;
@@ -26,9 +27,11 @@ export const HeaderArea = ({
     setApiKeys
 }: HeaderAreaProps) => {
     const saveApiKeys = () => {
-        localStorage.setItem("ai-api-keys", JSON.stringify(apiKeys))
+        // Encrypt API keys before storing in localStorage
+        const encryptedKeys = encryptApiKeys(apiKeys);
+        localStorage.setItem("ai-api-keys", JSON.stringify(encryptedKeys))
         setApiKeysOpen(false)
-        toast.success("Your API keys have been saved securely.")
+        toast.success("Your API keys have been encrypted and saved securely.")
     }
 
     return (

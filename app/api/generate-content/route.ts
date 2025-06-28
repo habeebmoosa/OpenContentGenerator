@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { generateText } from "ai"
 import { createOpenAI, openai } from "@ai-sdk/openai"
 import { createGoogleGenerativeAI, google } from "@ai-sdk/google"
+import { decryptApiKey } from "@/lib/encryption"
 
 interface GenerateRequest {
   prompt: string
@@ -64,16 +65,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
+    // Decrypt the API key before using it
+    const decryptedApiKey = decryptApiKey(apiKey)
+    if (!decryptedApiKey) {
+      return NextResponse.json({ error: "Invalid or corrupted API key" }, { status: 400 })
+    }
+
     // Configure the AI model
     let aiModel
     if (provider === "OpenAI") {
       const openai = createOpenAI({
-        apiKey: apiKey,
+        apiKey: decryptedApiKey,
       })
       aiModel = openai
     } else if (provider === "Google") {
       const gemini = createGoogleGenerativeAI({
-        apiKey: apiKey
+        apiKey: decryptedApiKey
       })
       aiModel = gemini
     } else {

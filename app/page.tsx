@@ -33,6 +33,7 @@ import { useTheme } from "next-themes"
 import { FooterArea } from "@/components/FooterArea";
 import { getAvailableModels, type LLMModel } from "@/lib/models";
 import { DummyPosts } from "@/lib/dummy";
+import { decryptApiKeys } from "@/lib/encryption"
 
 export interface GeneratedPost {
   id: string
@@ -92,7 +93,7 @@ export default function SocialMediaGenerator() {
   const [prompt, setPrompt] = useState("")
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(["linkedin"])
   const [selectedModel, setSelectedModel] = useState<LLMModel>(modelOptions[0])
-  const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>(DummyPosts ?? [])
+  const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [configOpen, setConfigOpen] = useState(false)
   const [apiKeysOpen, setApiKeysOpen] = useState(false)
@@ -122,7 +123,21 @@ export default function SocialMediaGenerator() {
   useEffect(() => {
     const savedKeys = localStorage.getItem("ai-api-keys")
     if (savedKeys) {
-      setApiKeys(JSON.parse(savedKeys))
+      try {
+        const encryptedKeys = JSON.parse(savedKeys)
+
+        const decryptedKeys = decryptApiKeys(encryptedKeys)
+        setApiKeys(decryptedKeys)
+      } catch (error) {
+        console.error("Error loading API keys:", error)
+
+        try {
+          const plainKeys = JSON.parse(savedKeys)
+          setApiKeys(plainKeys)
+        } catch (e) {
+          console.error("Failed to load API keys:", e)
+        }
+      }
     }
   }, [])
 
