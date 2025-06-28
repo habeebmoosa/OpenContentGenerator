@@ -93,7 +93,7 @@ export default function SocialMediaGenerator() {
   const [prompt, setPrompt] = useState("")
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(["linkedin"])
   const [selectedModel, setSelectedModel] = useState<LLMModel>(modelOptions[0])
-  const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>([])
+  const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>(DummyPosts ?? [])
   const [isGenerating, setIsGenerating] = useState(false)
   const [configOpen, setConfigOpen] = useState(false)
   const [apiKeysOpen, setApiKeysOpen] = useState(false)
@@ -305,7 +305,7 @@ export default function SocialMediaGenerator() {
 
       {/* Post Detail Dialog */}
       <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
-        <DialogContent className="max-w-2xl dark:bg-gray-800">
+        <DialogContent className="max-w-2xl max-h-[80vh] dark:bg-gray-800">
           {selectedPost && (
             <>
               <DialogHeader>
@@ -317,46 +317,48 @@ export default function SocialMediaGenerator() {
                   {platformNames[selectedPost.platform]} Post
                 </DialogTitle>
               </DialogHeader>
-              <div className="space-y-4">
-                {selectedPost.title && (
+              <ScrollArea className="max-h-[60vh]">
+                <div className="space-y-4 pr-4">
+                  {selectedPost.title && (
+                    <div>
+                      <Label className="text-sm font-medium dark:text-gray-200">Title</Label>
+                      <p className="mt-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md dark:text-white">
+                        {selectedPost.title}
+                      </p>
+                    </div>
+                  )}
                   <div>
-                    <Label className="text-sm font-medium dark:text-gray-200">Title</Label>
-                    <p className="mt-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md dark:text-white">
-                      {selectedPost.title}
-                    </p>
-                  </div>
-                )}
-                <div>
-                  <Label className="text-sm font-medium dark:text-gray-200">Content</Label>
-                  <div className="mt-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md whitespace-pre-wrap dark:text-white">
-                    {selectedPost.content}
-                  </div>
-                </div>
-                {selectedPost.hashtags && selectedPost.hashtags.length > 0 && (
-                  <div>
-                    <Label className="text-sm font-medium dark:text-gray-200">Hashtags</Label>
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {selectedPost.hashtags.map((tag, index) => (
-                        <Badge key={index} variant="secondary" className="dark:bg-gray-600 dark:text-gray-200">
-                          #{tag}
-                        </Badge>
-                      ))}
+                    <Label className="text-sm font-medium dark:text-gray-200">Content</Label>
+                    <div className="mt-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md whitespace-pre-wrap dark:text-white">
+                      {selectedPost.content}
                     </div>
                   </div>
-                )}
-                <div className="flex gap-2 pt-4">
-                  <Button variant="outline" onClick={() => copyToClipboard(selectedPost.content)} className="flex-1">
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copy Content
-                  </Button>
-                  <Button
-                    onClick={() => openSocialMedia(selectedPost.platform, selectedPost.content)}
-                    className="flex-1"
-                  >
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Post to {platformNames[selectedPost.platform]}
-                  </Button>
+                  {selectedPost.hashtags && selectedPost.hashtags.length > 0 && (
+                    <div>
+                      <Label className="text-sm font-medium dark:text-gray-200">Hashtags</Label>
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {selectedPost.hashtags.map((tag, index) => (
+                          <Badge key={index} variant="secondary" className="dark:bg-gray-600 dark:text-gray-200">
+                            #{tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
+              </ScrollArea>
+              <div className="flex gap-2 pt-4">
+                <Button variant="outline" onClick={() => copyToClipboard(selectedPost.content)} className="flex-1">
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy Content
+                </Button>
+                <Button
+                  onClick={() => openSocialMedia(selectedPost.platform, selectedPost.content)}
+                  className="flex-1"
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Post to {platformNames[selectedPost.platform]}
+                </Button>
               </div>
             </>
           )}
