@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
 import { encryptApiKeys } from "@/lib/encryption";
+import { useState } from "react";
 
 interface HeaderAreaProps {
     theme: string;
@@ -16,6 +17,8 @@ interface HeaderAreaProps {
         gemini: string;
     };
     setApiKeys: (keys: { openai: string; gemini: string }) => void;
+    openAIBaseURL: string;
+    setOpenAIBaseURL: (value: string) => void;
 }
 
 export const HeaderArea = ({
@@ -24,12 +27,15 @@ export const HeaderArea = ({
     apiKeysOpen,
     setApiKeysOpen,
     apiKeys,
-    setApiKeys
+    setApiKeys,
+    openAIBaseURL,
+    setOpenAIBaseURL
 }: HeaderAreaProps) => {
     const saveApiKeys = () => {
         // Encrypt API keys before storing in localStorage
         const encryptedKeys = encryptApiKeys(apiKeys);
         localStorage.setItem("ai-api-keys", JSON.stringify(encryptedKeys))
+        localStorage.setItem("openai-base-url", openAIBaseURL)
         setApiKeysOpen(false)
         toast.success("Your API keys have been encrypted and saved securely.")
     }
@@ -57,7 +63,7 @@ export const HeaderArea = ({
                                 <DialogTitle className="dark:text-white">API Keys Configuration</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
-                                <div>
+                                <div className="space-y-2">
                                     <Label htmlFor="openai-key" className="dark:text-gray-200">
                                         OpenAI API Key
                                     </Label>
@@ -69,8 +75,18 @@ export const HeaderArea = ({
                                         onChange={(e) => setApiKeys({ ...apiKeys, openai: e.target.value })}
                                         className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     />
+                                    <Label htmlFor="openai-key" className="dark:text-gray-200">
+                                        OpenAI Base URL (Only for GitHub Provider)
+                                    </Label>
+                                    <Input
+                                        id="openai-baseurl"
+                                        value={openAIBaseURL}
+                                        onChange={(e) => setOpenAIBaseURL(e.target.value)}
+                                        placeholder="https://..."
+                                        className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    />
                                 </div>
-                                <div>
+                                <div className="space-y-2">
                                     <Label htmlFor="gemini-key" className="dark:text-gray-200">
                                         Google API Key
                                     </Label>

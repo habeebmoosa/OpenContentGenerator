@@ -4,29 +4,19 @@ import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { FloatingInputArea } from "@/components/FloatingInputArea"
 import { HeaderArea } from "@/components/HeaderArea"
 import {
-  Settings,
   Copy,
   ExternalLink,
   Linkedin,
   MessageCircle,
-  Key,
   Sparkles,
-  Moon,
-  Sun,
-  ChevronDown,
-  ArrowUp,
 } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
@@ -82,11 +72,6 @@ const platformNames = {
   twitter: "X",
 }
 
-const modelOptions = [
-  { value: "openai", label: "GPT-4" },
-  { value: "gemini", label: "Gemini" },
-]
-
 export default function SocialMediaGenerator() {
   const modelOptions = getAvailableModels();
 
@@ -95,10 +80,11 @@ export default function SocialMediaGenerator() {
   const [selectedModel, setSelectedModel] = useState<LLMModel>(modelOptions[0])
   const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>(DummyPosts ?? [])
   const [isGenerating, setIsGenerating] = useState(false)
-  const [configOpen, setConfigOpen] = useState(false)
   const [apiKeysOpen, setApiKeysOpen] = useState(false)
   const [selectedPost, setSelectedPost] = useState<GeneratedPost | null>(null)
   const { theme, setTheme } = useTheme()
+
+  const [openAIBaseURL, setOpenAIBaseURL] = useState("");
 
   const [userConfig, setUserConfig] = useState<UserConfig>({
     knowledgeBase: "",
@@ -121,7 +107,12 @@ export default function SocialMediaGenerator() {
 
   // Load API keys from localStorage on mount
   useEffect(() => {
-    const savedKeys = localStorage.getItem("ai-api-keys")
+    const savedKeys = localStorage.getItem("ai-api-keys");
+    
+    const openaiBaseURL = localStorage.getItem("openai-base-url")
+    console.log(openaiBaseURL)
+    setOpenAIBaseURL(openaiBaseURL ?? "")
+
     if (savedKeys) {
       try {
         const encryptedKeys = JSON.parse(savedKeys)
@@ -177,6 +168,7 @@ export default function SocialMediaGenerator() {
           model: selectedModel.id,
           provider: selectedModel.provider,
           apiKey: currentApiKey,
+          openAIBaseURL: openAIBaseURL
         }),
       })
 
@@ -201,10 +193,10 @@ export default function SocialMediaGenerator() {
     toast.success("Content copied to clipboard.")
   }
 
-  const openSocialMedia = (platform: string, content: string) => {
+  const openSocialMedia = (platform: string, content: string, title: string) => {
     const urls = {
       linkedin: "https://www.linkedin.com/sharing/share-offsite/",
-      reddit: "https://www.reddit.com/submit",
+      reddit: `https://www.reddit.com/submit?title=${title}&text=${content}`,
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(content)}`,
     }
 
@@ -222,6 +214,8 @@ export default function SocialMediaGenerator() {
           setApiKeysOpen={setApiKeysOpen}
           apiKeys={apiKeys}
           setApiKeys={setApiKeys}
+          setOpenAIBaseURL={setOpenAIBaseURL}
+          openAIBaseURL={openAIBaseURL}
         />
       </div>
 
@@ -353,7 +347,7 @@ export default function SocialMediaGenerator() {
                   Copy Content
                 </Button>
                 <Button
-                  onClick={() => openSocialMedia(selectedPost.platform, selectedPost.content)}
+                  onClick={() => openSocialMedia(selectedPost.platform, selectedPost.content, selectedPost.title ?? "")}
                   className="flex-1"
                 >
                   <ExternalLink className="w-4 h-4 mr-2" />

@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { generateText } from "ai"
-import { createOpenAI, openai } from "@ai-sdk/openai"
-import { createGoogleGenerativeAI, google } from "@ai-sdk/google"
+import { createOpenAI } from "@ai-sdk/openai"
+import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { decryptApiKey } from "@/lib/encryption"
 
 interface GenerateRequest {
@@ -21,6 +21,7 @@ interface GenerateRequest {
   model: string
   provider: string
   apiKey: string
+  openAIBaseURL?: string
 }
 
 const platformPrompts = {
@@ -59,7 +60,7 @@ const platformPrompts = {
 export async function POST(request: NextRequest) {
   try {
     const body: GenerateRequest = await request.json()
-    const { prompt, platforms, config, model, provider, apiKey } = body
+    const { prompt, platforms, config, model, provider, apiKey, openAIBaseURL } = body
 
     if (!platforms || !prompt || !model || !provider || !apiKey) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
@@ -76,11 +77,12 @@ export async function POST(request: NextRequest) {
     if (provider === "OpenAI") {
       const openai = createOpenAI({
         apiKey: decryptedApiKey,
+        baseURL: openAIBaseURL ? openAIBaseURL : undefined
       })
       aiModel = openai
     } else if (provider === "Google") {
       const gemini = createGoogleGenerativeAI({
-        apiKey: decryptedApiKey
+        apiKey: decryptedApiKey,
       })
       aiModel = gemini
     } else {
