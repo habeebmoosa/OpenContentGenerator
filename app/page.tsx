@@ -4,19 +4,18 @@ import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { FloatingInputArea } from "@/components/FloatingInputArea"
 import { HeaderArea } from "@/components/HeaderArea"
+import { ContentArea } from "@/components/ContentArea"
 import {
   Copy,
   ExternalLink,
   Linkedin,
   MessageCircle,
-  Sparkles,
 } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
@@ -78,7 +77,7 @@ export default function SocialMediaGenerator() {
   const [prompt, setPrompt] = useState("")
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(["linkedin"])
   const [selectedModel, setSelectedModel] = useState<LLMModel>(modelOptions[0])
-  const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>(DummyPosts ?? [])
+  const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [apiKeysOpen, setApiKeysOpen] = useState(false)
   const [selectedPost, setSelectedPost] = useState<GeneratedPost | null>(null)
@@ -220,57 +219,12 @@ export default function SocialMediaGenerator() {
       </div>
 
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full">
-          <div className="p-6 pb-20">
-            {generatedPosts.length === 0 ? (
-              <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-                <div className="text-center">
-                  <Sparkles className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-                  <p className="text-lg mb-2">Ready to generate amazing content!</p>
-                  <p className="text-sm">Enter your prompt below and select your platforms to get started.</p>
-                </div>
-              </div>
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
-                {generatedPosts.map((post) => {
-                  const IconComponent = platformIcons[post.platform]
-                  return (
-                    <Card
-                      key={post.id}
-                      className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-800 dark:border-gray-700"
-                    >
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <Badge className={platformColors[post.platform]}>
-                            <IconComponent className="w-3 h-3 mr-1" />
-                            {platformNames[post.platform]}
-                          </Badge>
-                        </div>
-                        {post.title && (
-                          <CardTitle className="text-sm font-medium line-clamp-2 dark:text-white">{post.title}</CardTitle>
-                        )}
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-3">{post.content}</p>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline" onClick={() => copyToClipboard(post.content)}>
-                            <Copy className="w-3 h-3 mr-1" />
-                            Copy
-                          </Button>
-                          <Button size="sm" onClick={() => setSelectedPost(post)}>
-                            View
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-        </ScrollArea>
-      </div>
+      <ContentArea
+        generatedPosts={generatedPosts}
+        setSelectedPost={setSelectedPost}
+        copyToClipboard={copyToClipboard}
+        setPrompt={setPrompt}
+      />
 
       {/* Fixed Floating Input Area */}
       <div className="flex-shrink-0 px-6">

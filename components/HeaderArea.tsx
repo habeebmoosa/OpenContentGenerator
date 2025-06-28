@@ -1,11 +1,10 @@
-import { Key, Moon, Sparkles, Sun } from "lucide-react"
+import { Key, Moon, Settings2, Sparkles, Sun } from "lucide-react"
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
 import { encryptApiKeys } from "@/lib/encryption";
-import { useState } from "react";
 
 interface HeaderAreaProps {
     theme: string;
@@ -48,14 +47,13 @@ export const HeaderArea = ({
                     <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Open Content Generator</h1>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                    <Button className="cursor-pointer" variant="outline" size="sm" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
                         {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                     </Button>
                     <Dialog open={apiKeysOpen} onOpenChange={setApiKeysOpen}>
                         <DialogTrigger asChild>
-                            <Button variant="outline" size="sm">
-                                <Key className="w-4 h-4 mr-2" />
-                                API Keys
+                            <Button variant="outline" size="sm" className="cursor-pointer">
+                                <Settings2 className="w-4 h-4" />
                             </Button>
                         </DialogTrigger>
                         <DialogContent className="dark:bg-gray-800">
