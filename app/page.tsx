@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { FloatingInputArea } from "@/components/FloatingInputArea"
+import { FloatingInputArea } from "@/components/input-area/FloatingInputArea"
 import { HeaderArea } from "@/components/HeaderArea"
 import { ContentArea } from "@/components/ContentArea"
 import {
