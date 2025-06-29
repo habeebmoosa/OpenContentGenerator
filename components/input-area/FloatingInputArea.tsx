@@ -121,7 +121,7 @@ export const FloatingInputArea = ({
                   className={`h-8 px-3 ${isSelected ? platformColors[platform] : "hover:bg-gray-100 dark:hover:bg-gray-700"}`}
                 >
                   <IconComponent className="w-4 h-4 mr-1" />
-                  {platformNames[platform]}
+                  <span className="hidden sm:inline">{platformNames[platform]}</span>
                 </Button>
               );
             })}
