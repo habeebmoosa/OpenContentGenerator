@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { generateObject, generateText } from "ai"
+import { generateObject } from "ai"
 import { createOpenAI } from "@ai-sdk/openai"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { decryptApiKey } from "@/lib/encryption";
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
         // console.log(object)
 
         // Add platform info and unique IDs to each post
-        object.forEach((post: any) => {
+        object.forEach((post: { content: string; title: string; hashtags: string[] }) => {
           generatedPosts.push({
             id: `${platform}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             platform: platform,
