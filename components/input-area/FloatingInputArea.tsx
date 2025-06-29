@@ -5,19 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "../ui/textarea";
 import { getAvailableModels, type LLMModel } from "@/lib/models";
 import { ContentConfig } from "./ContentConfig";
-
-export interface UserConfig {
-  knowledgeBase: string;
-  topic: string;
-  tone: string;
-  targetAudience: string;
-  postLength: string;
-  postsPerPlatform: {
-    linkedin: number;
-    reddit: number;
-    twitter: number;
-  };
-}
+import { UserConfig } from "@/lib/types";
 
 interface FloatingInputAreaProps {
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;

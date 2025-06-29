@@ -1,8 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { generateText } from "ai"
+import { generateObject, generateText } from "ai"
 import { createOpenAI } from "@ai-sdk/openai"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
-import { decryptApiKey } from "@/lib/encryption"
+import { decryptApiKey } from "@/lib/encryption";
+import { z } from 'zod';
 
 interface Post {
   id: string
@@ -56,7 +57,7 @@ const platformPrompts = {
   },
   twitter: {
     instructions: `Create Twitter/X content that:
-    - Is concise and impactful (under 280 characters when possible)
+    - Is concise and impactful
     - Uses trending hashtags and mentions when relevant
     - Includes engaging hooks and calls-to-action
     - Encourages retweets and replies
@@ -102,9 +103,6 @@ export async function POST(request: NextRequest) {
 
     // Generate content for each selected platform
     for (const platform of platforms) {
-      // if (!["linkedin", "reddit", "twitter"].includes(platform)) continue;
-
-      // const typedPlatform = platform as "linkedin" | "reddit" | "twitter";
       const platformConfig = platformPrompts[platform as keyof typeof platformPrompts]
       const postsToGenerate = config.postsPerPlatform[platform as keyof typeof config.postsPerPlatform]
 
@@ -117,19 +115,9 @@ export async function POST(request: NextRequest) {
         Tone: ${config.tone}
         Post Length: ${config.postLength}
 
-        Platform Instructions:
-        ${platformConfig.instructions}
+        Platform Instructions: ${platformConfig.instructions}
 
         Generate ${postsToGenerate} unique, high-quality posts that will perform well on ${platform}. Each post should be optimized for maximum engagement and reach on this specific platform.
-
-        Return the response as a JSON array with this exact structure:
-        [
-          {
-            "content": "The main post content",
-            "title": "Optional title for the post (if applicable)",
-            "hashtags": ["hashtag1", "hashtag2", "hashtag3"]
-          }
-        ]
 
         Make sure each post is unique, valuable, and tailored specifically for ${platform}'s audience and algorithm.`
 
@@ -140,38 +128,23 @@ export async function POST(request: NextRequest) {
         Remember to make each post unique and optimized for ${platform} specifically.`
 
       try {
-        const { text } = await generateText({
+        const { object } = await generateObject({
           model: aiModel(model),
           system: systemPrompt,
           prompt: userPrompt,
           temperature: 0.8,
+          output: 'array',
+          schema: z.object({
+            content: z.string().describe("The main post content"),
+            title: z.string().describe("Optional title for the post (if applicable)"),
+            hashtags: z.array(z.string()).describe("hashtags for post ranking e.g. ['hashtag1', 'hashtag2', 'hashtag3', ...]")
+          })
         })
 
-        // Parse the JSON response
-        let parsedPosts
-        try {
-          // Clean the response to extract JSON
-          const jsonMatch = text.match(/\[[\s\S]*\]/)
-          if (jsonMatch) {
-            parsedPosts = JSON.parse(jsonMatch[0])
-          } else {
-            // Fallback: try to parse the entire response
-            parsedPosts = JSON.parse(text)
-          }
-        } catch (parseError) {
-          // Fallback: create a single post from the text
-          console.log(parseError)
-          parsedPosts = [
-            {
-              content: text,
-              title: null,
-              hashtags: [],
-            },
-          ]
-        }
+        // console.log(object)
 
         // Add platform info and unique IDs to each post
-        parsedPosts.forEach((post: Post) => {
+        object.forEach((post: any) => {
           generatedPosts.push({
             id: `${platform}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             platform: platform,

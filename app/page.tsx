@@ -22,32 +22,7 @@ import { useTheme } from "next-themes"
 import { FooterArea } from "@/components/FooterArea";
 import { getAvailableModels, type LLMModel } from "@/lib/models";
 import { decryptApiKeys } from "@/lib/encryption"
-
-export interface GeneratedPost {
-  id: string
-  platform: "linkedin" | "reddit" | "twitter"
-  content: string
-  hashtags?: string[]
-  title?: string
-}
-
-interface UserConfig {
-  knowledgeBase: string
-  topic: string
-  tone: string
-  targetAudience: string
-  postLength: string
-  postsPerPlatform: {
-    linkedin: number
-    reddit: number
-    twitter: number
-  }
-}
-
-interface ApiKeys {
-  openai: string
-  gemini: string
-}
+import { ApiKeys, GeneratedPost, UserConfig } from "@/lib/types";
 
 const platformIcons = {
   linkedin: Linkedin,

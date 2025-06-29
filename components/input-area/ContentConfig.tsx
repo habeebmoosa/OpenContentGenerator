@@ -5,11 +5,11 @@ import { Input } from "../ui/input";
 import { Settings } from "lucide-react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { UserConfig } from "./FloatingInputArea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "../ui/scroll-area";
 import { toast } from "sonner";
+import { UserConfig } from "@/lib/types";
 
 interface ContentConfigProps {
     configOpen: boolean;
