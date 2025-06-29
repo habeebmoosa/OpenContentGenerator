@@ -216,7 +216,7 @@ export default function SocialMediaGenerator() {
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors">
       {/* Fixed Header */}
-      <div className="flex-shrink-0 shadow-sm">
+      <div className="flex-shrink-0">
         <HeaderArea
           theme={theme || "light"}
           setTheme={setTheme}

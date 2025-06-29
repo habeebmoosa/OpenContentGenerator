@@ -1,4 +1,4 @@
-import { Key, Moon, Settings2, Sparkles, Sun } from "lucide-react"
+import { Key, Moon, Settings2, Sparkles, Sun, Github, Star } from "lucide-react"
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -40,12 +40,24 @@ export const HeaderArea = ({
     }
 
     return (
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-            <div className="flex items-center justify-between">
+        <header className="relative px-6">
+            {/* Left section - absolutely positioned */}
+            <div className="absolute left-6 top-6 transform -translate-y-1/2 z-10">
                 <div className="flex items-center gap-2">
-                    <Sparkles className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                    <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Open Content Generator</h1>
+                    <a
+                        href="https://github.com/habeebmoosa/opencontentgenerator"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1 shadow-sm gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        <Github className="w-5 h-5" />
+                        <span className="text-base font-semibold text-gray-900 dark:text-white">1</span>
+                    </a>
                 </div>
+            </div>
+            
+            {/* Right section - absolutely positioned */}
+            <div className="absolute right-6 top-6 transform -translate-y-1/2 z-10">
                 <div className="flex items-center gap-2">
                     <Button className="cursor-pointer" variant="outline" size="sm" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
                         {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
