@@ -82,8 +82,8 @@ export const FloatingInputArea = ({
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-2">
+    <div className="w-full max-w-2xl mx-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-2">
         {/* Textarea */}
         <Textarea
           ref={textareaRef}

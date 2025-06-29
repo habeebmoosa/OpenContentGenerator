@@ -205,29 +205,27 @@ export default function SocialMediaGenerator() {
         setPrompt={setPrompt}
       />
 
+
       {/* Fixed Floating Input Area */}
-      <div className="flex-shrink-0 px-6">
+      <div className="flex-shrink-0 fixed bottom-5 left-1/2 transform -translate-x-1/2 z-50 px-6 w-full max-w-2xl">
         <div className="relative">
-          {/* Shadow overlay to create depth effect */}
-          <div className="absolute inset-x-0 -top-6 h-6 bg-gradient-to-t from-gray-50 dark:from-gray-900 via-gray-50/50 dark:via-gray-900/50 to-transparent pointer-events-none"></div>
-          <div className="relative">
-            <FloatingInputArea
-              textareaRef={textareaRef}
-              prompt={prompt}
-              setPrompt={setPrompt}
-              generateContent={generateContent}
-              selectedPlatforms={selectedPlatforms}
-              togglePlatform={togglePlatform}
-              selectedModel={selectedModel}
-              setSelectedModel={setSelectedModel}
-              isGenerating={isGenerating}
-              userConfig={userConfig}
-              setUserConfig={setUserConfig}
-            />
-          </div>
+          <FloatingInputArea
+            textareaRef={textareaRef}
+            prompt={prompt}
+            setPrompt={setPrompt}
+            generateContent={generateContent}
+            selectedPlatforms={selectedPlatforms}
+            togglePlatform={togglePlatform}
+            selectedModel={selectedModel}
+            setSelectedModel={setSelectedModel}
+            isGenerating={isGenerating}
+            userConfig={userConfig}
+            setUserConfig={setUserConfig}
+          />
         </div>
       </div>
 
+      {/* Footer Area */}
       <FooterArea />
 
       {/* Post Detail Dialog */}

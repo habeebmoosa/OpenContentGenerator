@@ -43,9 +43,9 @@ export const ContentArea = ({
   return (
     <div className="flex-1 overflow-hidden">
       <ScrollArea className="h-full">
-        <div className="p-6 pb-20">
+        <div className="p-6 pb-34">
           {generatedPosts.length === 0 ? (
-            <div className="flex items-center justify-center min-h-[60vh] text-gray-500 dark:text-gray-400">
+            <div className="flex items-center justify-center min-h-[70vh] text-gray-500 dark:text-gray-400">
               <div className="w-full max-w-xl mx-auto">
                 {/* <Sparkles className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" /> */}
                 <h2 className="text-3xl font-semibold mb-2">Generate Content with AI</h2>
