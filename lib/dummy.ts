@@ -1,4 +1,4 @@
-import { GeneratedPost } from "@/app/page";
+import { GeneratedPost } from "@/lib/types";
 
 export const DummyPosts: GeneratedPost[] = [
     {
@@ -54,6 +54,19 @@ export const DummyPosts: GeneratedPost[] = [
     },
     {
         id: "8",
+        platform: "twitter",
+        content: "New blog post: Mastering useEffect in React ⚛️🔥",
+        hashtags: ["#reactjs", "#webdev"]
+    },
+    {
+        id: "9",
+        platform: "linkedin",
+        content: "5 lessons I learned from my first startup failure.",
+        hashtags: ["#entrepreneurship", "#lessonslearned"],
+        title: "Lessons from Startup Failure"
+    },
+    {
+        id: "10",
         platform: "twitter",
         content: "New blog post: Mastering useEffect in React ⚛️🔥",
         hashtags: ["#reactjs", "#webdev"]
