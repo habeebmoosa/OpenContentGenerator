@@ -11,6 +11,7 @@ export interface UserConfig {
   topic: string;
   tone: string;
   targetAudience: string;
+  postLength: string;
   postsPerPlatform: {
     linkedin: number;
     reddit: number;

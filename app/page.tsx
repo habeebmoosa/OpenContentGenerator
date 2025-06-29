@@ -37,6 +37,7 @@ interface UserConfig {
   topic: string
   tone: string
   targetAudience: string
+  postLength: string
   postsPerPlatform: {
     linkedin: number
     reddit: number
@@ -90,6 +91,7 @@ export default function SocialMediaGenerator() {
     topic: "",
     tone: "professional",
     targetAudience: "",
+    postLength: "medium",
     postsPerPlatform: {
       linkedin: 3,
       reddit: 3,
@@ -107,10 +109,19 @@ export default function SocialMediaGenerator() {
   // Load API keys from localStorage on mount
   useEffect(() => {
     const savedKeys = localStorage.getItem("ai-api-keys");
-    
-    const openaiBaseURL = localStorage.getItem("openai-base-url")
+    const openaiBaseURL = localStorage.getItem("openai-base-url");
+    const savedConfigs = localStorage.getItem("post-config");
+
     console.log(openaiBaseURL)
     setOpenAIBaseURL(openaiBaseURL ?? "")
+
+    if (savedConfigs) {
+      try {
+        setUserConfig(JSON.parse(savedConfigs))
+      } catch (error) {
+        console.error("Error loading Post configs:", error)
+      }
+    }
 
     if (savedKeys) {
       try {

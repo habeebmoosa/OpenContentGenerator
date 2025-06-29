@@ -11,7 +11,8 @@ interface GenerateRequest {
     knowledgeBase: string
     topic: string
     tone: string
-    targetAudience: string
+    targetAudience: string;
+    postLength: string;
     postsPerPlatform: {
       linkedin: number
       reddit: number
@@ -103,6 +104,7 @@ export async function POST(request: NextRequest) {
         ${config.topic ? `Topic Focus: ${config.topic}` : ""}
         ${config.targetAudience ? `Target Audience: ${config.targetAudience}` : ""}
         Tone: ${config.tone}
+        Post Length: ${config.postLength}
 
         Platform Instructions:
         ${platformConfig.instructions}
