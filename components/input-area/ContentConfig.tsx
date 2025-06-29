@@ -16,7 +16,7 @@ interface ContentConfigProps {
     setConfigOpen: (config: boolean) => void;
     userConfig: UserConfig;
     setUserConfig: (config: UserConfig | ((prev: UserConfig) => UserConfig)) => void;
-    platformNames: any;
+    platformNames: Record<"linkedin" | "reddit" | "twitter", string>;
 }
 
 export const ContentConfig = ({

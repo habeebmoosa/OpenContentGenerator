@@ -21,7 +21,6 @@ import { toast } from "sonner"
 import { useTheme } from "next-themes"
 import { FooterArea } from "@/components/FooterArea";
 import { getAvailableModels, type LLMModel } from "@/lib/models";
-import { DummyPosts } from "@/lib/dummy";
 import { decryptApiKeys } from "@/lib/encryption"
 
 export interface GeneratedPost {
@@ -58,12 +57,6 @@ const platformIcons = {
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
   ),
-}
-
-const platformColors = {
-  linkedin: "bg-blue-600 hover:bg-blue-700 text-white",
-  reddit: "bg-orange-600 hover:bg-orange-700 text-white",
-  twitter: "bg-black hover:bg-gray-800 text-white dark:bg-white dark:text-black dark:hover:bg-gray-200",
 }
 
 const platformNames = {
@@ -192,7 +185,7 @@ export default function SocialMediaGenerator() {
 
       toast.success(`Generated ${data.posts.length} posts successfully.`)
     } catch (error) {
-      toast.error("Failed to generate content. Please try again.")
+      toast.error(`Failed to generate content: ${error}. Please try again.`)
     } finally {
       setIsGenerating(false)
     }

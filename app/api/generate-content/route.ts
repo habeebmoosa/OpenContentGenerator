@@ -4,6 +4,14 @@ import { createOpenAI } from "@ai-sdk/openai"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { decryptApiKey } from "@/lib/encryption"
 
+interface Post {
+  id: string
+  platform: string
+  content: string
+  hashtags?: string[]
+  title?: string
+}
+
 interface GenerateRequest {
   prompt: string
   platforms: string[]
@@ -90,10 +98,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid provider selected" }, { status: 400 })
     }
 
-    let generatedPosts: any = []
+    const generatedPosts: Post[] = []
 
     // Generate content for each selected platform
     for (const platform of platforms) {
+      // if (!["linkedin", "reddit", "twitter"].includes(platform)) continue;
+
+      // const typedPlatform = platform as "linkedin" | "reddit" | "twitter";
       const platformConfig = platformPrompts[platform as keyof typeof platformPrompts]
       const postsToGenerate = config.postsPerPlatform[platform as keyof typeof config.postsPerPlatform]
 
@@ -149,6 +160,7 @@ export async function POST(request: NextRequest) {
           }
         } catch (parseError) {
           // Fallback: create a single post from the text
+          console.log(parseError)
           parsedPosts = [
             {
               content: text,
@@ -159,10 +171,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Add platform info and unique IDs to each post
-        parsedPosts.forEach((post: any) => {
+        parsedPosts.forEach((post: Post) => {
           generatedPosts.push({
             id: `${platform}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            platform,
+            platform: platform,
             content: post.content,
             title: post.title,
             hashtags: post.hashtags || [],

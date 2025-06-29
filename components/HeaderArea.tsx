@@ -1,4 +1,4 @@
-import { Key, Moon, Settings2, Sparkles, Sun, Github, Star } from "lucide-react"
+import { Moon, Settings2, Sun, Github } from "lucide-react"
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
