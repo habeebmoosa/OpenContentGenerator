@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
 import { encryptApiKeys } from "@/lib/encryption";
+import { useEffect, useState } from "react";
 
 interface HeaderAreaProps {
     theme: string;
@@ -30,6 +31,18 @@ export const HeaderArea = ({
     openAIBaseURL,
     setOpenAIBaseURL
 }: HeaderAreaProps) => {
+    const [githubStars, setGitHubStars] = useState(0);
+
+    const getGithubStars = async () => {
+        const data = await fetch('https://api.github.com/repos/habeebmoosa/opencontentgenerator');
+        const githubData = await data.json();
+        setGitHubStars(githubData.stargazers_count ?? 0)
+    }
+
+    useEffect(() =>{
+        getGithubStars();
+    }, [])
+
     const saveApiKeys = () => {
         // Encrypt API keys before storing in localStorage
         const encryptedKeys = encryptApiKeys(apiKeys);
@@ -51,7 +64,7 @@ export const HeaderArea = ({
                         className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1 shadow-sm gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     >
                         <Github className="w-5 h-5" />
-                        <span className="text-base font-semibold text-gray-900 dark:text-white">1</span>
+                        <span className="text-base font-semibold text-gray-900 dark:text-white">{githubStars}</span>
                     </a>
                 </div>
             </div>
