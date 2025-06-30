@@ -4,9 +4,11 @@ import { Badge } from "./ui/badge";
 import { Copy, Linkedin, MessageCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { GeneratedPost } from "@/lib/types";
+import { toast } from "sonner";
 
 interface ContentAreaProps {
   generatedPosts: GeneratedPost[];
+  setGeneratedPosts: (posts: GeneratedPost[]) => void;
   setSelectedPost: (post: GeneratedPost) => void;
   copyToClipboard: (content: string) => void;
   setPrompt: (prompt: string) => void;
@@ -38,8 +40,16 @@ export const ContentArea = ({
   generatedPosts,
   setSelectedPost,
   copyToClipboard,
-  setPrompt
+  setPrompt,
+  setGeneratedPosts
 }: ContentAreaProps) => {
+
+  const handleClearContent = () => {
+    setGeneratedPosts([])
+    localStorage.setItem("get-generated-content", JSON.stringify([]))
+    toast.success("All posts are cleared successfully.")
+  }
+
   return (
     <div className="flex-1 overflow-hidden">
       <ScrollArea className="h-full">
@@ -122,6 +132,15 @@ export const ContentArea = ({
                   </Card>
                 )
               })}
+            </div>
+          )}
+          {generatedPosts.length !== 0 && (
+            <div className="flex justify-center mt-2">
+              <Button 
+              variant="outline" 
+              className="h-8 rounded-full cursor-pointer dark:bg-gray-700"
+              onClick={handleClearContent}
+              >Clear Content</Button>
             </div>
           )}
         </div>

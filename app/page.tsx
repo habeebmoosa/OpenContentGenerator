@@ -79,8 +79,9 @@ export default function SocialMediaGenerator() {
     const savedKeys = localStorage.getItem("ai-api-keys");
     const openaiBaseURL = localStorage.getItem("openai-base-url");
     const savedConfigs = localStorage.getItem("post-config");
+    const generatedContent = localStorage.getItem("get-generated-content");
 
-    console.log(openaiBaseURL)
+    // console.log(openaiBaseURL)
     setOpenAIBaseURL(openaiBaseURL ?? "")
 
     if (savedConfigs) {
@@ -94,8 +95,8 @@ export default function SocialMediaGenerator() {
     if (savedKeys) {
       try {
         const encryptedKeys = JSON.parse(savedKeys)
-
         const decryptedKeys = decryptApiKeys(encryptedKeys)
+
         setApiKeys(decryptedKeys)
       } catch (error) {
         console.error("Error loading API keys:", error)
@@ -106,6 +107,14 @@ export default function SocialMediaGenerator() {
         } catch (e) {
           console.error("Failed to load API keys:", e)
         }
+      }
+    }
+
+    if (generatedContent) {
+      try {
+        setGeneratedPosts(JSON.parse(generatedContent))
+      } catch (error) {
+        console.error("Error loading generated posts from local: ", error)
       }
     }
   }, [])
@@ -155,9 +164,14 @@ export default function SocialMediaGenerator() {
       }
 
       const data = await response.json()
-      setGeneratedPosts((prev) => [...prev, ...data.posts])
-      setPrompt("")
 
+      setGeneratedPosts((prev) => {
+        const updatedPosts = [...prev, ...data.posts];
+        localStorage.setItem("get-generated-content", JSON.stringify(updatedPosts));
+        return updatedPosts;
+      });
+
+      setPrompt("")
       toast.success(`Generated ${data.posts.length} posts successfully.`)
     } catch (error) {
       toast.error(`Failed to generate content: ${error}. Please try again.`)
@@ -200,6 +214,7 @@ export default function SocialMediaGenerator() {
       {/* Scrollable Content Area */}
       <ContentArea
         generatedPosts={generatedPosts}
+        setGeneratedPosts={setGeneratedPosts}
         setSelectedPost={setSelectedPost}
         copyToClipboard={copyToClipboard}
         setPrompt={setPrompt}
